@@ -1,0 +1,5 @@
+[server]
+folderWatchBlacklist = ["venv", ".venv", "torch"]
+headless = true
+port = 8501
+enableCORS = false

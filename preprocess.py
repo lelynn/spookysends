@@ -1,6 +1,8 @@
 from modules import extract_and_align_frames
 from modules import extract_frames
 from modules import segment_climber_enhanced
+import os
+os.environ["YOLO_CONFIG_DIR"] = "/tmp"
 from ultralytics import YOLO  # for segmentation
 
 import os 
