@@ -1,0 +1,10 @@
+static/
+frames/
+masks/
+output/
+/bin
+*.mp4
+*.avi
+*.mov
+__pycache__/
+
