@@ -8,11 +8,10 @@ SpookySends UI is a visual tool that overlays failed climbing attempts as transp
 
 I started this project after recording multiple sessions on the Tension Board. Like many climbers, I had a long send video and a bunch of short fail clips. I wanted a way to combine them into something more expressive, to test out new and creative ways of showcasing movement on the wall, without manually editing each one. This led me to write an algorithm that aligns, segments, and overlays my previous attempts into one video. The result shows my failed selves “haunting” the wall as I complete the climb, similar to the ghost replay concept in Mario Kart.
 
-<!-- ![Overlay of ghost fail on send](frontend/thumb1.PNG) -->
-<img src="frontend/thumb1.PNG" alt="Overlay of ghost fail on send" width="150">
-<img src="frontend/thumb2.PNG" alt="Overlay of ghost fail on send" width="150">
-
-
+<div style="display: flex; gap: 10px;">
+  <img src="frontend/thumb1.PNG" alt="Overlay of ghost fail on send" width="150">
+  <img src="frontend/thumb2.PNG" alt="Overlay of ghost fail on send" width="150">
+</div>
 
 ## What it does
 
