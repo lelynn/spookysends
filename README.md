@@ -1,6 +1,6 @@
 # SpookySends UI
 
-SpookySends UI is a visual tool that overlays failed climbing attempts as transparent ghosts on top of a successful send video. It captures the process of projecting a climb and turns it into a visual story that celebrates the effort, not just the outcome.
+SpookySends UI (deployed on https://spookysends.streamlit.app/) is a visual tool that overlays failed climbing attempts as transparent ghosts on top of a successful send video. It captures the process of projecting a climb and turns it into a visual story that celebrates the effort, not just the outcome.
 
 ![Screenshot of interface](frontend/screenshotUI.png)
 
