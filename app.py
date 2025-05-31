@@ -15,7 +15,7 @@ import uuid
 from glob import glob
 import cv2
 import numpy as np
-from bin.pipeline import run_spookysends_with_overlay
+from pipeline import run_spookysends_with_overlay
 from preprocess import preprocess_all
 import time
 start_time = time.time()
