@@ -1,10 +1,12 @@
 import streamlit as st
+import streamlit.components.v1 as components
+
 import os
 import uuid
 from glob import glob
 import cv2
 import numpy as np
-from pipeline_trying import run_spookysends_with_overlay
+from pipeline import run_spookysends_with_overlay
 from preprocess import preprocess_all
 
 import streamlit as st
@@ -13,7 +15,7 @@ import uuid
 from glob import glob
 import cv2
 import numpy as np
-from pipeline import run_spookysends_with_overlay
+from bin.pipeline import run_spookysends_with_overlay
 from preprocess import preprocess_all
 import time
 start_time = time.time()
@@ -84,20 +86,22 @@ def create_temp_workspace():
     return base_dir
 
 st.set_page_config(page_title="SpookySends", layout="centered")
-st.title("🧷 Spookysends video generator")
+
+
+st.title("🧷 SpookySends: A ghost overlay video tool for beta clips")
 st.write("Upload a send video and one or more fail videos to create a ghost overlay.")
 
 # Uploaded files:
 send_file = st.file_uploader("Upload send video (.mp4 or .mov)", type=["mp4", "mov"])
 fail_files = st.file_uploader("Upload fail video(s)", type=["mp4", "mov"], accept_multiple_files=True)
-background_file = st.file_uploader("For clear footage, add a clip of just the wall without human (optional)", type=["mp4", "mov"])
+background_file = st.file_uploader("For better and faster results, add a frame of just the wall without climber (optional) but make sure its from the send video", type=["mp4", "mov"])
 
 
-if st.button("Generate Ghost Overlay") and send_file and fail_files:
+if st.button("Generate ghost overlay") and send_file and fail_files:
     with st.spinner("Processing... this might take a while ⏳"):
         
-        # temp_root = create_temp_workspace()
-        temp_root = os.path.join("static", "temp_sessions", '97ba34fe')  # For dev override, becomes root folder for everything
+        temp_root = create_temp_workspace()
+        # temp_root = os.path.join("static", "temp_sessions", '97ba34fe')  # For dev override, becomes root folder for everything
         st.write(f"📂 Using workspace directory: {temp_root}")
 
         # Save uploaded videos
@@ -134,13 +138,13 @@ if st.button("Generate Ghost Overlay") and send_file and fail_files:
         background_path = create_background_image(background_file, send_frames_dir)        
         
         # # 🧼 Step 2: Preprocess videos (extract frames, segment masks, etc.)
-        # preprocess_all(send_video_path, # temp_root/send_video.mp4
-        #                fail_video_paths, #[temp_root/fail_video0.mp4, temp_root/fail_video1.mp4]
-        #                send_frames_dir,# temp_root/send_frames
-        #                fail_dirs, # [temp_root/fail_0, temp_root/fail_1/]
-        #                alpha_dirs, # [temp_root/fail_0_alpha,temp_root/fail_0_alpha]
-        #                temp_root
-        #                )
+        preprocess_all(send_video_path, # temp_root/send_video.mp4
+                       fail_video_paths, #[temp_root/fail_video0.mp4, temp_root/fail_video1.mp4]
+                       send_frames_dir,# temp_root/send_frames
+                       fail_dirs, # [temp_root/fail_0, temp_root/fail_1/]
+                       alpha_dirs, # [temp_root/fail_0_alpha,temp_root/fail_0_alpha]
+                       temp_root
+                       )
         # 👻 Step 3: Generate ghost overlay output video
         os.makedirs(f'{temp_root}/output/', exist_ok = True)
         result_file_path = f'{temp_root}/output/spookysends_output.mp4'
@@ -164,10 +168,14 @@ if st.button("Generate Ghost Overlay") and send_file and fail_files:
         end_time = time.time()
         print(f"⏱️ Total runtime: {(end_time - start_time)/60} minutes")
 
+import streamlit as st
 
+col1, col2 = st.columns(2)
 
-        
+with col1:
+    if st.image("frontend/thumb1.PNG", width=150):
+        st.markdown("[watch reel](https://www.instagram.com/p/DKL_ifRopcY/)", unsafe_allow_html=True)
 
-
-        # 👻 Step 3: Generate ghost overlay output video
-
+with col2:
+    if st.image("frontend/thumb2.PNG", width=150):
+        st.markdown("[watch reel](https://www.instagram.com/reel/DKRG2mcIs5M/)", unsafe_allow_html=True)

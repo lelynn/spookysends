@@ -7,7 +7,7 @@ import cv2
 from glob import glob
 import os
 import numpy as np
-
+import modules
 def run_spookysends_with_overlay(
     send_frames_dir,# e.g. "frames/send"
     fail_dirs, 
@@ -30,20 +30,12 @@ def run_spookysends_with_overlay(
     ghost_point1 = ghost_appears[0]
     ghost_point2 = ghost_appears[1]
     
-    # print("📁 fail_dirs[0]:", fail_dirs[0])
-    # print("📁 fail_dirs[1]:", fail_dirs[1])
-
-    # print("🔍 glob result for fail_dirs[0]:", glob(os.path.join(fail_dirs[0], "frame_*.png")))
-    # print("🔍 glob result for fail_dirs[1]:", glob(os.path.join(fail_dirs[1], "frame_*.png")))
-
-    # Load paths
     send_frame_paths = sorted(glob(os.path.join(send_frames_dir, "frame_*.jpg")))
     fail_masks = {
         ghost_point1: sorted(glob(os.path.join(fail_dirs[0], "frame_*.jpg"))),
         ghost_point2: sorted(glob(os.path.join(fail_dirs[1], "frame_*.jpg")))
     }
 
-    # Define when ghosts appear (in frame indices)
     pause_points = {
         int(max(0, ghost_point1 - 3)): fail_masks[ghost_point1],
         int(max(0, ghost_point2 - 2)): fail_masks[ghost_point2]
@@ -59,24 +51,33 @@ def run_spookysends_with_overlay(
             pause_index = pause_frames.index(i)
             fail_t = list(pause_points.keys())[pause_index]
             fail_mask_frames = pause_points[fail_t]
-            print(f"👀len (fail_mask_frames): ", len(fail_mask_frames))
-            print(f"fail_t: ", fail_t)
 
-            # Use static background (you can change to send_frame_paths[i] if you prefer)
-            # base_frame = cv2.imread(background_path)
-            base_frame = cv2.imread(send_frame_paths[i])
+            send_frame = cv2.imread(send_frame_paths[i])
+            alpha_folder = os.path.join(alpha_dirs[pause_index], "alpha_masks")
+            os.makedirs(alpha_folder, exist_ok=True)
+            send_alpha_path = os.path.join(alpha_folder, os.path.basename(send_frame_paths[i]).replace(".jpg", "_alpha.png"))
+
+            if not os.path.exists(send_alpha_path):
+                from ultralytics import YOLO  # for segmentation
+
+                model = YOLO(os.path.join(temp_root, "yolov8n-seg.pt"))  # lightweight YOLOv8 segmentation model
+                modules.segment_single_frame(send_frame_paths[i], send_alpha_path, model, background_path)
+
+            send_alpha = cv2.imread(send_alpha_path, cv2.IMREAD_GRAYSCALE)
+            if send_alpha is not None:
+                send_alpha = send_alpha.astype(np.float32) / 255.0
+                faded_climber = (send_frame.astype(np.float32) * send_alpha[..., None] * 0.3).astype(np.uint8)
+                background = send_frame.copy()
+                background[send_alpha > 0.1] = faded_climber[send_alpha > 0.1]
+                base_frame = background
+            else:
+                base_frame = cv2.imread(background_path)
 
             for ghost_path in fail_mask_frames:
-                # print(f"👀 Frame {i} is now in the pause_frames loop")
-
                 ghost_frame = cv2.imread(ghost_path)
-
-                # Match alpha mask from same folder's /alpha_masks/
                 frame_name = os.path.basename(ghost_path).replace(".jpg", "_alpha.png")
                 alpha_path = os.path.join(alpha_dirs[pause_index], "alpha_masks", frame_name)
                 alpha_mask = cv2.imread(alpha_path, cv2.IMREAD_GRAYSCALE)
-                if not os.path.exists(alpha_path):
-                    print("❗️Alpha mask path does not exist:", alpha_path)
 
                 if alpha_mask is None:
                     print(f"❌ Missing alpha mask for {ghost_path}")
@@ -88,12 +89,12 @@ def run_spookysends_with_overlay(
                 alpha_3ch = cv2.merge([alpha_mask] * 3)
                 ghost_f = ghost_frame.astype(np.float32)
                 base_f = base_frame.astype(np.float32)
-                # base_f *= dimming_value  # Optional dimming of background
+                base_f *= dimming_value
 
                 overlay = (alpha_3ch * ghost_f + (1 - alpha_3ch) * base_f).astype(np.uint8)
                 output_frames.append(overlay)
 
-            i += 1  # Continue to next send frame after ghost
+            i += 1
         else:
             frame = cv2.imread(send_frame_paths[i])
             output_frames.append(frame)

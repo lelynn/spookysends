@@ -11,14 +11,14 @@ def preprocess_all(send_video_path, #temp_root/send_video.mp4
                    alpha_dirs, # [temp_root/fail_0_alpha,temp_root/fail_0_alpha]
                    temp_root):
     
-    # extract_frames(send_video_path, send_frames_dir)
-    # print('Send frames extracted, Starting fail 0 frame alignments...')
+    extract_frames(send_video_path, send_frames_dir)
+    print('Send frames extracted, Starting fail 0 frame alignments...')
 
-    # extract_and_align_frames(fail_video_paths[0], fail_dirs[0], reference_frame_path=os.path.join(send_frames_dir, "frame_0240.jpg"))
-    # print('Send frames extracted, Starting fail 1 frame alignments...')
+    extract_and_align_frames(fail_video_paths[0], fail_dirs[0], reference_frame_path=os.path.join(send_frames_dir, "frame_0240.jpg"))
+    print('Send frames extracted, Starting fail 1 frame alignments...')
 
-    # extract_and_align_frames(fail_video_paths[1], fail_dirs[1], reference_frame_path=os.path.join(send_frames_dir, "frame_0240.jpg"))
-    # print('All alignments done...')
+    extract_and_align_frames(fail_video_paths[1], fail_dirs[1], reference_frame_path=os.path.join(send_frames_dir, "frame_0240.jpg"))
+    print('All alignments done...')
 
     # Initialize segmentation model
     model = YOLO(os.path.join(temp_root, "yolov8n-seg.pt"))  # lightweight YOLOv8 segmentation model
