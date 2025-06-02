@@ -6,7 +6,7 @@ SpookySends UI (deployed on https://spookysends.streamlit.app/) is a visual tool
 
 ## Background
 
-I started this project after recording multiple sessions on the Tension Board. Like many climbers, I had a long send video and a bunch of short fail clips. I wanted a way to combine them into something more expressive, to test out new and creative ways of showcasing movement on the wall, without manually editing each one. This led me to write an algorithm that aligns, segments, and overlays my previous attempts into one video. The result shows my failed selves “haunting” the wall as I complete the climb, similar to the ghost replay concept in Mario Kart.
+I started this project after recording multiple sessions on the Tension Board. When looking back at the footage, I thought the climb looks way easier than it actually felt... Since I had multiple fail & one successful clip, I thought there must be a way to combine them into something more expressive, to test out new and creative ways of showcasing movement on the wall, while highlighting the successful climb but also not neglecting the fails that got me to the success, allllll that without manually editing it because that would take hours per clip. This led me to write an algorithm that aligns, segments, and overlays my previous attempts into one video. The result shows my failed selves “haunting” the wall as I complete the climb, similar to the ghost replay concept in Mario Kart.
 
 <div style="display: flex; gap: 10px;">
   <img src="frontend/thumb1.PNG" alt="Overlay of ghost fail on send" width="150">
@@ -15,7 +15,7 @@ I started this project after recording multiple sessions on the Tension Board. L
 
 ## What it does
 
-You upload one video of your successful send and one or more short clips where you fell at specific points during earlier attempts. The system does not automatically align them in time. Instead, you define the timestamps in the send video where each fail should appear. The system then
+You upload one video of your successful send and one or more short clips where you fell at specific points during earlier attempts. The system does not automatically align them in time (yet, im working on it). Instead, you define the timestamps in the send video where each fail should appear. The system then
 
 - Segments the climber in each fail clip using a YOLO-based AI model
 - Aligns each fail spatially with the send using homography matrices
